@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Firsthand — Hear the Other Side of America</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Heritage palette — "Purple Strategy" */
+      --navy:      #1B2C5E;
+      --navy-dark: #0E1A3A;
+      --navy-mid:  #253D7A;
+      --crimson:   #9C1C30;
+      --crimson-h: #7E1526;
+      --gold:      #C9A84C;
+      --gold-lt:   #E8C86A;
+      --white:     #FFFFFF;
+      --parchment: #F4EFE4;
+      --cream:     #FAF7F2;
+
+      --bg:       #F4EFE4;
+      --surface:  #FFFFFF;
+      --surf2:    #EDE8DE;
+      --border:   #DDD8CC;
+      --text:     #1A1714;
+      --text2:    #5C574E;
+      --text3:    #9A9488;
+
+      --r:  10px;
+      --rs: 6px;
+      --ease: 0.18s ease;
+      --sans:    'Inter', system-ui, sans-serif;
+      --serif:   'Lora', Georgia, serif;
+      --display: 'Playfair Display', Georgia, serif;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Thin top accent ────────────────────── */
+    .accent-bar {
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--navy) 0%, var(--crimson) 50%, var(--navy) 100%);
+    }
+
+    /* ─── Nav ───────────────────────────────── */
+    nav {
+      width: 100%;
+      background: var(--navy-dark);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 28px;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-emblem {
+      width: 28px; height: 28px;
+      background: linear-gradient(135deg, var(--gold) 0%, #A07830 100%);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+      color: var(--navy-dark);
+      font-weight: 800;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 2px rgba(201,168,76,0.25);
+    }
+
+    .logo-text {
+      font-family: var(--display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.01em;
+    }
+
+    .logo-tagline {
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      padding-left: 1px;
+    }
+
+    .nav-right {
+      font-size: 0.67rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ─── HERO — Video + Caption Slideshow ───── */
+    .hero {
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      height: 480px;
+      background: var(--navy-dark);
+    }
+
+    /* Video background */
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0;
+      transition: opacity 1.6s ease;
+    }
+    .hero-video.loaded { opacity: 1; }
+
+    /* Gradient overlay — darkens video for text legibility */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to right, rgba(14,26,58,0.88) 0%, rgba(14,26,58,0.45) 60%, rgba(14,26,58,0.35) 100%),
+        linear-gradient(to top, rgba(14,26,58,0.95) 0%, transparent 60%);
+      z-index: 2;
+    }
+
+    /* Subtle vignette */
+    .hero-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.38) 100%);
+      z-index: 3;
+    }
+
+    /* Historical grain texture overlay */
+    .hero-grain {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      pointer-events: none;
+    }
+
+    /* Slide captions */
+    .slide {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      opacity: 0;
+      transition: opacity 1.6s ease-in-out;
+      display: flex;
+      align-items: flex-end;
+    }
+    .slide.active { opacity: 1; }
+
+    .slide-caption {
+      padding: 0 48px 52px;
+      max-width: 560px;
+    }
+
+    .slide-era {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.9);
+    }
+
+    .slide-title {
+      font-family: var(--display);
+      font-size: clamp(1.6rem, 3.8vw, 2.5rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.12;
+      letter-spacing: -0.01em;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,0.8);
+      margin-bottom: 10px;
+    }
+
+    .slide-sub {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.6);
+      text-shadow: 0 1px 8px rgba(0,0,0,0.9);
+      line-height: 1.5;
+    }
+
+    /* Dividing rule between era and title */
+    .slide-rule {
+      width: 32px;
+      height: 2px;
+      background: var(--gold);
+      margin-bottom: 14px;
+      opacity: 0.85;
+    }
+
+    /* Main hero headline (always visible) */
+    .hero-headline {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      z-index: 6;
+      padding: 52px 48px 0;
+      pointer-events: none;
+    }
+
+    .hero-headline-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.9);
+    }
+
+    .hero-headline h1 {
+      font-family: var(--display);
+      font-size: clamp(1.6rem, 4.5vw, 3rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.7);
+      max-width: 520px;
+    }
+
+    .hero-headline h1 em {
+      font-style: italic;
+      color: var(--gold-lt);
+    }
+
+    .hero-headline p {
+      margin-top: 14px;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.5);
+      text-shadow: 0 1px 8px rgba(0,0,0,0.9);
+      max-width: 380px;
+      line-height: 1.65;
+    }
+
+    /* Dots */
+    .slide-dots {
+      position: absolute;
+      bottom: 20px;
+      right: 28px;
+      z-index: 10;
+      display: flex;
+      gap: 7px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      cursor: pointer;
+      transition: background var(--ease), transform var(--ease), width var(--ease);
+      border: none;
+    }
+    .dot.active { background: var(--gold); transform: scale(1.3); }
+
+    /* ─── Hero strip (below hero) ───────────── */
+    .hero-strip {
+      width: 100%;
+      background: var(--navy);
+      padding: 26px 28px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .hero-strip-inner {
+      max-width: 660px;
+      margin: 0 auto;
+    }
+
+    .hero-strip h2 {
+      font-family: var(--display);
+      font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: -0.01em;
+      margin-bottom: 7px;
+      line-height: 1.3;
+    }
+
+    .hero-strip h2 .gold { color: var(--gold-lt); }
+
+    .hero-strip p {
+      font-size: 0.86rem;
+      color: rgba(255,255,255,0.42);
+      line-height: 1.75;
+    }
+
+    /* ─── Main ──────────────────────────────── */
+    main {
+      width: 100%;
+      max-width: 760px;
+      padding: 28px 24px 96px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* ─── Cards ─────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+      overflow: hidden;
+    }
+
+    /* ─── Tabs ──────────────────────────────── */
+    .tabs {
+      display: flex;
+      background: var(--surf2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab {
+      flex: 1;
+      padding: 11px 16px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text2);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: var(--ease);
+    }
+
+    .tab:hover { color: var(--text); }
+    .tab.active { color: var(--navy); background: var(--surface); border-bottom-color: var(--navy); }
+
+    .tab-panel { display: none; padding: 18px 22px 22px; }
+    .tab-panel.active { display: block; }
+
+    .url-row { display: flex; gap: 8px; }
+    .url-wrap { flex: 1; position: relative; }
+
+    .url-icon {
+      position: absolute;
+      left: 10px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--text3);
+      pointer-events: none;
+      display: flex;
+    }
+
+    input[type="url"] {
+      width: 100%;
+      padding: 10px 12px 10px 32px;
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--rs);
+      outline: none;
+      transition: border-color var(--ease), box-shadow var(--ease);
+    }
+
+    input:focus {
+      border-color: var(--navy-mid);
+      box-shadow: 0 0 0 3px rgba(27,44,94,0.1);
+      background: var(--surface);
+    }
+    input::placeholder { color: var(--text3); }
+
+    textarea {
+      width: 100%;
+      min-height: 170px;
+      padding: 11px 13px;
+      font-family: var(--sans);
+      font-size: 0.87rem;
+      line-height: 1.65;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--rs);
+      resize: vertical;
+      outline: none;
+      transition: border-color var(--ease), box-shadow var(--ease);
+    }
+
+    textarea:focus {
+      border-color: var(--navy-mid);
+      box-shadow: 0 0 0 3px rgba(27,44,94,0.1);
+      background: var(--surface);
+    }
+    textarea::placeholder { color: var(--text3); }
+
+    .hint { margin-top: 7px; font-size: 0.74rem; color: var(--text3); line-height: 1.5; }
+
+    /* ─── Buttons ───────────────────────────── */
+    .btn {
+      cursor: pointer;
+      font-family: var(--sans);
+      font-weight: 600;
+      border: none;
+      border-radius: var(--rs);
+      transition: all var(--ease);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+
+    .btn-navy { background: var(--navy); color: #fff; font-size: 0.87rem; padding: 10px 18px; }
+    .btn-navy:hover { background: var(--navy-mid); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(27,44,94,0.3); }
+
+    .btn-red { background: var(--crimson); color: #fff; font-size: 0.87rem; padding: 10px 18px; }
+    .btn-red:hover { background: var(--crimson-h); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(156,28,48,0.3); }
+
+    .btn-ghost { background: var(--surf2); color: var(--text2); font-size: 0.84rem; padding: 10px 14px; border: 1px solid var(--border); }
+    .btn-ghost:hover { background: var(--border); color: var(--text); }
+
+    .btn-row { margin-top: 14px; display: flex; gap: 8px; align-items: center; }
+    .hint-key { font-size: 0.7rem; color: var(--text3); margin-left: 2px; }
+
+    /* ─── Loading ───────────────────────────── */
+    #loading {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      padding: 48px 0;
+    }
+
+    .flag-loader { display: flex; gap: 4px; align-items: flex-end; }
+
+    .flag-bar {
+      width: 5px;
+      height: 28px;
+      border-radius: 3px;
+      animation: barwave 1.1s ease-in-out infinite;
+    }
+    .flag-bar:nth-child(odd)  { background: var(--crimson); }
+    .flag-bar:nth-child(even) { background: var(--navy); }
+    .flag-bar:nth-child(2) { animation-delay: 0.1s; }
+    .flag-bar:nth-child(3) { animation-delay: 0.2s; }
+    .flag-bar:nth-child(4) { animation-delay: 0.3s; }
+    .flag-bar:nth-child(5) { animation-delay: 0.4s; }
+    .flag-bar:nth-child(6) { animation-delay: 0.5s; }
+    .flag-bar:nth-child(7) { animation-delay: 0.6s; }
+
+    @keyframes barwave {
+      0%, 100% { transform: scaleY(0.3); opacity: 0.3; }
+      50% { transform: scaleY(1); opacity: 1; }
+    }
+
+    .loading-label { font-size: 0.86rem; color: var(--text2); font-style: italic; }
+
+    /* ─── Output ────────────────────────────── */
+    #output {
+      display: none;
+      flex-direction: column;
+      border-top: 3px solid var(--crimson);
+      animation: fadeUp 0.35s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .out-header {
+      background: var(--navy);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+
+    .pill-l { background: rgba(255,255,255,0.1); color: #93C5FD; }
+    .pill-r { background: rgba(156,28,48,0.35); color: #FCA5A5; }
+    .pill-n { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.4); }
+    .pill-b { background: rgba(201,168,76,0.2); color: var(--gold-lt); }
+
+    .out-topic { font-size: 0.72rem; color: rgba(255,255,255,0.32); margin-left: auto; }
+
+    .out-body { padding: 24px; }
+
+    .persona {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .avatar {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      border: 2px solid rgba(27,44,94,0.12);
+    }
+
+    .persona-name { display: block; font-size: 0.92rem; font-weight: 600; }
+    .persona-loc  { display: block; font-size: 0.76rem; color: var(--text3); margin-top: 2px; }
+
+    .stars-sep {
+      text-align: center;
+      color: var(--crimson);
+      letter-spacing: 16px;
+      font-size: 0.58rem;
+      opacity: 0.45;
+      margin: 0 0 20px;
+    }
+
+    .story {
+      font-family: var(--serif);
+      font-size: 1.07rem;
+      line-height: 1.95;
+      color: #1A1714;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .out-footer {
+      padding: 14px 18px 16px;
+      border-top: 1px solid var(--border);
+      background: var(--surf2);
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* ─── Alerts ─────────────────────────────── */
+    .alert {
+      border-radius: var(--r);
+      padding: 14px 18px;
+      font-size: 0.87rem;
+      line-height: 1.6;
+      border: 1px solid;
+    }
+    #error    { display: none; background: #FFF0F2; border-color: #FBCDD4; color: #7A1020; }
+    #skip-msg { display: none; background: #FFFBEA; border-color: #FDE992; color: #7A5500; }
+    .alert strong { display: block; font-weight: 600; margin-bottom: 2px; }
+    .alert-btns { margin-top: 10px; display: flex; gap: 8px; }
+
+    /* ─── Footer ─────────────────────────────── */
+    footer {
+      width: 100%;
+      background: var(--navy-dark);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 28px 24px 36px;
+      text-align: center;
+    }
+
+    .footer-emblem {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      text-decoration: none;
+    }
+
+    .footer-star-ring {
+      font-size: 0.55rem;
+      color: rgba(201,168,76,0.35);
+      letter-spacing: 8px;
+    }
+
+    footer p {
+      font-size: 0.71rem;
+      color: rgba(255,255,255,0.22);
+      line-height: 1.85;
+    }
+
+    /* ─── Responsive ─────────────────────────── */
+    @media (max-width: 580px) {
+      .nav-right { display: none; }
+      main { padding: 16px 14px 64px; }
+      .hero { height: 360px; }
+      .hero-headline { padding: 32px 22px 0; }
+      .slide-caption { padding: 0 22px 36px; }
+      .hero-strip { padding: 20px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Accent bar ────────────────────────────── -->
+<div class="accent-bar"></div>
+
+<!-- ── Nav ──────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="/">
+      <div class="logo-emblem">★</div>
+      <div>
+        <div class="logo-text">Firsthand</div>
+        <div class="logo-tagline">One Nation · Many Stories</div>
+      </div>
+    </a>
+    <span class="nav-right">Est. America</span>
+  </div>
+</nav>
+
+<!-- ── HERO ──────────────────────────────────── -->
+<div class="hero" id="hero">
+
+  <!--
+    Video background.
+    Free patriotic stock video suggestions:
+      • https://www.pexels.com/video/american-flag-waving-857251/
+      • https://www.pexels.com/video/crowd-of-people-walking-1437396/
+      • https://coverr.co/videos/american-flag-waving-in-the-wind
+    Download your chosen video, place as frontend/hero.mp4, and update the src below.
+    The hero looks beautiful even without the video — the gradient fallback is intentional.
+  -->
+  <video
+    id="hero-video"
+    class="hero-video"
+    autoplay
+    muted
+    loop
+    playsinline
+    poster=""
+    src="hero.mp4"
+  ></video>
+
+  <div class="hero-overlay"></div>
+  <div class="hero-vignette"></div>
+  <div class="hero-grain"></div>
+
+  <!-- Persistent headline top-left -->
+  <div class="hero-headline">
+    <div class="hero-headline-eyebrow">A Firsthand Story</div>
+    <h1>Building a More<br><em>Perfect Union,</em><br>Together.</h1>
+    <p>Every news story has another side — not an argument, a life.</p>
+  </div>
+
+  <!-- Historical moment slides — text only, on top of video -->
+
+  <!-- Slide 1: Moon Landing -->
+  <div class="slide active" id="slide-0">
+    <div class="slide-caption">
+      <div class="slide-era">July 20, 1969</div>
+      <div class="slide-rule"></div>
+      <div class="slide-title">One Small Step</div>
+      <div class="slide-sub">Apollo 11 · Sea of Tranquility, The Moon</div>
+    </div>
+  </div>
+
+  <!-- Slide 2: Iwo Jima -->
+  <div class="slide" id="slide-1">
+    <div class="slide-caption">
+      <div class="slide-era">February 23, 1945</div>
+      <div class="slide-rule"></div>
+      <div class="slide-title">Raising the Flag</div>
+      <div class="slide-sub">Battle of Iwo Jima · Mt. Suribachi, Pacific</div>
+    </div>
+  </div>
+
+  <!-- Slide 3: Civil Rights -->
+  <div class="slide" id="slide-2">
+    <div class="slide-caption">
+      <div class="slide-era">August 28, 1963</div>
+      <div class="slide-rule"></div>
+      <div class="slide-title">I Have a Dream</div>
+      <div class="slide-sub">March on Washington · National Mall, D.C.</div>
+    </div>
+  </div>
+
+  <!-- Slide 4: Women's Suffrage -->
+  <div class="slide" id="slide-3">
+    <div class="slide-caption">
+      <div class="slide-era">August 18, 1920</div>
+      <div class="slide-rule"></div>
+      <div class="slide-title">The Right to Vote</div>
+      <div class="slide-sub">19th Amendment Ratified · United States</div>
+    </div>
+  </div>
+
+  <!-- Slide 5: Space Shuttle -->
+  <div class="slide" id="slide-4">
+    <div class="slide-caption">
+      <div class="slide-era">April 12, 1981</div>
+      <div class="slide-rule"></div>
+      <div class="slide-title">Columbia Lifts Off</div>
+      <div class="slide-sub">STS-1 · Kennedy Space Center, Florida</div>
+    </div>
+  </div>
+
+  <!-- Slide dots -->
+  <div class="slide-dots" role="tablist" aria-label="Historical moments">
+    <button class="dot active" onclick="goSlide(0)" aria-label="Moon Landing"></button>
+    <button class="dot" onclick="goSlide(1)" aria-label="Iwo Jima"></button>
+    <button class="dot" onclick="goSlide(2)" aria-label="Civil Rights March"></button>
+    <button class="dot" onclick="goSlide(3)" aria-label="Women's Suffrage"></button>
+    <button class="dot" onclick="goSlide(4)" aria-label="Space Shuttle"></button>
+  </div>
+</div>
+
+<!-- ── Hero Strip ─────────────────────────────── -->
+<div class="hero-strip">
+  <div class="hero-strip-inner">
+    <h2>Hear America <span class="gold">firsthand</span></h2>
+    <p>Paste any news article or drop a link. Firsthand introduces you to a real-feeling American whose life put them on the other side — not through argument, through story.</p>
+  </div>
+</div>
+
+<!-- ── Main ──────────────────────────────────── -->
+<main>
+
+  <div class="card" id="input-card">
+    <div class="tabs">
+      <button class="tab active" id="tab-url" onclick="switchTab('url')">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        Paste a link
+      </button>
+      <button class="tab" id="tab-text" onclick="switchTab('text')">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Paste text
+      </button>
+    </div>
+
+    <div class="tab-panel active" id="panel-url">
+      <div class="url-row">
+        <div class="url-wrap">
+          <span class="url-icon">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </span>
+          <input type="url" id="url-input" placeholder="https://apnews.com/article/…" autocomplete="off" spellcheck="false"/>
+        </div>
+        <button class="btn btn-navy" id="url-btn" onclick="handleURL()">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Go
+        </button>
+      </div>
+      <p class="hint">Paste any article URL. Paywalled sites may need the text tab instead.</p>
+    </div>
+
+    <div class="tab-panel" id="panel-text">
+      <textarea id="text-input" placeholder="Paste any news article, editorial, or opinion piece — immigration, healthcare, gun rights, education, climate, policing, trade, religion…" spellcheck="false"></textarea>
+      <p class="hint">Works best with opinion pieces, policy debates, and social issue reporting.</p>
+      <div class="btn-row">
+        <button class="btn btn-navy" id="text-btn" onclick="handleText()">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Generate story
+        </button>
+        <span class="hint-key">or ⌘↩</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div id="loading">
+    <div class="flag-loader">
+      <div class="flag-bar"></div><div class="flag-bar"></div><div class="flag-bar"></div>
+      <div class="flag-bar"></div><div class="flag-bar"></div><div class="flag-bar"></div>
+      <div class="flag-bar"></div>
+    </div>
+    <p class="loading-label" id="loading-text">Reading the article…</p>
+  </div>
+
+  <!-- Output -->
+  <div class="card" id="output">
+    <div class="out-header">
+      <span class="pill" id="lean-pill"></span>
+      <span class="pill pill-b">★ Other side</span>
+      <span class="out-topic" id="out-topic"></span>
+    </div>
+    <div class="out-body">
+      <div class="persona">
+        <div class="avatar" id="avatar">👤</div>
+        <div>
+          <span class="persona-name" id="p-name"></span>
+          <span class="persona-loc" id="p-loc"></span>
+        </div>
+      </div>
+      <div class="stars-sep">★ &nbsp; ★ &nbsp; ★</div>
+      <p class="story" id="story-text"></p>
+    </div>
+    <div class="out-footer">
+      <button class="btn btn-red" onclick="handleRegenerate()">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 .49-5"/></svg>
+        Another story
+      </button>
+      <button class="btn btn-ghost" onclick="handleReset()">New article</button>
+    </div>
+  </div>
+
+  <!-- Alerts -->
+  <div class="alert" id="skip-msg">
+    <strong>No clear divide found</strong>
+    This article doesn't have a strong values-based tension. Firsthand works best with opinion pieces, policy debates, and social issue reporting.
+    <div class="alert-btns"><button class="btn btn-ghost" onclick="handleReset()">Try another article</button></div>
+  </div>
+
+  <div class="alert" id="error">
+    <strong>Something went wrong</strong>
+    <span id="error-text"></span>
+    <div class="alert-btns"><button class="btn btn-ghost" onclick="handleRetry()">Try again</button></div>
+  </div>
+
+</main>
+
+<!-- ── Footer ─────────────────────────────────── -->
+<footer>
+  <div class="footer-star-ring">★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★</div>
+  <p>
+    Firsthand &mdash; One Nation, Many Stories<br>
+    Stories are AI-generated fiction designed to build empathy across the American divide.<br>
+    All characters are fictional. No real individual or group is represented.
+  </p>
+</footer>
+
+<script>
+  const API = window.location.origin;
+  let activeTab = 'url', lastPayload = null;
+  const AVATARS = ['👩','👨','👴','👵','🧑','👩‍🌾','👨‍🔧','👩‍⚕️','👨‍🏫','👩‍💼','🧔','👩‍🍳','👨‍🚒','👷','👩‍🔬'];
+
+  // ── Video background ──────────────────────────
+  const heroVideo = document.getElementById('hero-video');
+  if (heroVideo) {
+    heroVideo.addEventListener('canplaythrough', () => {
+      heroVideo.classList.add('loaded');
+    });
+    // Graceful fail — video just doesn't show, gradient takes over
+    heroVideo.addEventListener('error', () => {
+      heroVideo.style.display = 'none';
+    });
+  }
+
+  // ── Slideshow ─────────────────────────────────
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.dot');
+  let slideTimer;
+
+  function goSlide(n) {
+    slides[currentSlide].classList.remove('active');
+    dots[currentSlide].classList.remove('active');
+    currentSlide = n;
+    slides[currentSlide].classList.add('active');
+    dots[currentSlide].classList.add('active');
+    clearInterval(slideTimer);
+    slideTimer = setInterval(nextSlide, 6500);
+  }
+
+  function nextSlide() { goSlide((currentSlide + 1) % slides.length); }
+  slideTimer = setInterval(nextSlide, 6500);
+
+  // ── Tabs ──────────────────────────────────────
+  function switchTab(tab) {
+    activeTab = tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(`tab-${tab}`).classList.add('active');
+    document.getElementById(`panel-${tab}`).classList.add('active');
+  }
+
+  // ── UI helpers ────────────────────────────────
+  function show(id)  { document.getElementById(id).style.display = 'flex'; }
+  function hide(id)  { document.getElementById(id).style.display = 'none'; }
+  function block(id) { document.getElementById(id).style.display = 'block'; }
+  function setText(id, t) { document.getElementById(id).textContent = t; }
+
+  function lockInputs(on) {
+    ['url-input','url-btn','text-input','text-btn'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.disabled = on;
+    });
+  }
+
+  function setLeanPill(lean) {
+    const pill = document.getElementById('lean-pill');
+    pill.className = 'pill';
+    const m = {
+      left:    ['pill-l', '◀ Left-leaning'],
+      right:   ['pill-r', 'Right-leaning ▶'],
+      neutral: ['pill-n', '— Neutral']
+    };
+    const [c, l] = m[lean] || m.neutral;
+    pill.classList.add(c);
+    pill.textContent = l;
+  }
+
+  function setAvatar(name) {
+    const i = (name.charCodeAt(0) + (name.charCodeAt(1)||0)) % AVATARS.length;
+    document.getElementById('avatar').textContent = AVATARS[i];
+  }
+
+  function showStory(data) {
+    hide('loading'); hide('error'); hide('skip-msg');
+    setLeanPill(data.meta.article_lean);
+    setText('out-topic', data.meta.topic);
+    setAvatar(data.persona.name);
+    setText('p-name', `${data.persona.name}, ${data.persona.age}`);
+    setText('p-loc', `${data.persona.occupation} · ${data.persona.location}`);
+    setText('story-text', data.story);
+    show('output');
+    document.getElementById('output').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function showError(msg) {
+    hide('loading'); hide('output'); hide('skip-msg');
+    setText('error-text', ' ' + msg);
+    block('error');
+  }
+
+  function showSkip() {
+    hide('loading'); hide('output'); hide('error');
+    block('skip-msg');
+  }
+
+  // ── Loading messages ──────────────────────────
+  let _t = [];
+  function startMsgs(isUrl) {
+    _t.forEach(clearTimeout);
+    const m = isUrl
+      ? [{d:0,t:'Fetching the article…'},{d:2500,t:'Finding someone to introduce you to…'},{d:6000,t:'Writing their story…'},{d:11000,t:'Almost there…'}]
+      : [{d:0,t:'Reading the article…'},{d:2000,t:'Finding someone to introduce you to…'},{d:5500,t:'Writing their story…'},{d:10000,t:'Almost there…'}];
+    _t = m.map(x => setTimeout(() => setText('loading-text', x.t), x.d));
+  }
+  function stopMsgs() { _t.forEach(clearTimeout); }
+
+  // ── Core ──────────────────────────────────────
+  async function callGenerate(payload) {
+    hide('output'); hide('error'); hide('skip-msg');
+    lockInputs(true); show('loading'); startMsgs(!!payload.url);
+    lastPayload = payload;
+    try {
+      const res = await fetch(`${API}/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      stopMsgs();
+      if (!res.ok) throw new Error(((await res.json().catch(()=>({}))).detail) || `Error ${res.status}`);
+      const data = await res.json();
+      if (data.skipped) showSkip(); else showStory(data);
+    } catch(err) {
+      stopMsgs();
+      showError(err.message || 'Could not connect to the server.');
+    } finally {
+      lockInputs(false);
+    }
+  }
+
+  function handleURL() {
+    const u = document.getElementById('url-input').value.trim();
+    if (!u) { showError('Please paste an article URL.'); return; }
+    if (!u.startsWith('http')) { showError('Enter a full URL starting with https://'); return; }
+    callGenerate({ url: u });
+  }
+
+  function handleText() {
+    const t = document.getElementById('text-input').value.trim();
+    if (!t || t.length < 100) { showError('Please paste a full article — at least a few paragraphs.'); return; }
+    callGenerate({ text: t });
+  }
+
+  function handleRegenerate() { if (lastPayload) callGenerate(lastPayload); }
+
+  function handleReset() {
+    lastPayload = null;
+    document.getElementById('url-input').value = '';
+    document.getElementById('text-input').value = '';
+    hide('output'); hide('error'); hide('skip-msg');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleRetry() { hide('error'); if (lastPayload) callGenerate(lastPayload); }
+
+  document.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      activeTab === 'url' ? handleURL() : handleText();
+    }
+  });
+
+  document.getElementById('text-input').addEventListener('input', e => {
+    const v = e.target.value.trim();
+    if (v.startsWith('http') && !v.includes(' ') && v.length < 300) {
+      document.getElementById('url-input').value = v;
+      e.target.value = '';
+      switchTab('url');
+    }
+  });
+</script>
+</body>
+</html>
