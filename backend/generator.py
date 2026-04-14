@@ -9,8 +9,7 @@ import logging
 import re
 import os
 
-from google import genai
-from google.genai import types
+import google.generativeai as genai
 from prompts import (
     STORY_PROMPT,
     NAMES_BY_REGION,
@@ -28,8 +27,10 @@ _recent_personas: list[dict] = []
 MAX_PERSONA_HISTORY = 10
 
 
-def _get_client() -> genai.Client:
-    return genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+def _get_model() -> genai.GenerativeModel:
+    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+    model = genai.GenerativeModel('gemini-3.1-flash-lite-preview')
+    return model
 
 
 def _wait_for_reset(attempt: int) -> None:
@@ -125,17 +126,16 @@ def generate_story(classification: dict) -> dict:
         other_side_value=tension.get("other_side_value", ""),
     )
 
-    client = _get_client()
+    model = _get_model()
 
     for attempt in range(MAX_RETRIES):
         try:
-            response = client.models.generate_content(
-                model="gemini-3.1-flash",
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    temperature=0.85,
-                    max_output_tokens=700,
-                ),
+            response = model.generate_content(
+                prompt,
+                generation_config={
+                    "temperature": 0.85,
+                    "max_output_tokens": 700,
+                },
             )
             story_text = _clean_story(response.text)
             wc = _word_count(story_text)
