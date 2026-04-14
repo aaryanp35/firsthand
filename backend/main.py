@@ -124,7 +124,7 @@ async def generate(req: GenerateRequest):
 
 @app.get("/health")
 async def health():
-    return {"status": "ok", "app": "firsthand", "model": "models/gemini-2.0-flash"}
+    return {"status": "ok", "app": "firsthand", "model": "models/gemini-3.1-flash-lite-preview"}
 
 
 # ── Entry point ────────────────────────────────────────────────────────────────

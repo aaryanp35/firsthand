@@ -130,7 +130,7 @@ def generate_story(classification: dict) -> dict:
     for attempt in range(MAX_RETRIES):
         try:
             response = client.models.generate_content(
-                model="models/gemini-2.0-flash",
+                model="models/gemini-3.1-flash-lite-preview",
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     temperature=0.85,
