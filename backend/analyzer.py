@@ -10,7 +10,8 @@ import logging
 import re
 import os
 
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 from prompts import CLASSIFIER_PROMPT
 
 logger = logging.getLogger(__name__)
@@ -20,10 +21,8 @@ BASE_WAIT_SECONDS = 15
 MAX_WAIT_SECONDS = 3600
 
 
-def _get_model() -> genai.GenerativeModel:
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-3.1-flash-lite-preview')
-    return model
+def _get_client() -> genai.Client:
+    return genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 
 def _wait_for_reset(attempt: int) -> None:
@@ -45,17 +44,18 @@ def classify_article(article_text: str) -> dict:
     Returns a dict matching the CLASSIFIER_PROMPT schema.
     Raises RuntimeError if all retries are exhausted.
     """
-    model = _get_model()
+    client = _get_client()
     prompt = CLASSIFIER_PROMPT.format(article_text=article_text[:8000])
 
     for attempt in range(MAX_RETRIES):
         try:
-            response = model.generate_content(
-                prompt,
-                generation_config={
-                    "temperature": 0.2,
-                    "max_output_tokens": 512,
-                },
+            response = client.models.generate_content(
+                model="models/gemini-2.0-flash",
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    temperature=0.2,
+                    max_output_tokens=512,
+                ),
             )
             raw = response.text
             cleaned = _clean_json_response(raw)
