@@ -8,8 +8,12 @@ Then open http://localhost:8000
 """
 
 import os
+import sys
 import logging
 from pathlib import Path
+
+# Ensure backend/ is on the path so Vercel can find analyzer, generator, fetcher
+sys.path.insert(0, os.path.dirname(__file__))
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
