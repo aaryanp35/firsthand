@@ -25,3 +25,7 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# One-off scripts and stray generated images at the repo root
+/setup_github.sh
+/Gemini_Generated_Image_*.png
