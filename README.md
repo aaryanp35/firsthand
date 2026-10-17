@@ -83,4 +83,4 @@ Honest caveats: there are no automated tests yet, story quality is judged by eye
 
 - Email: aaryanp35@gmail.com
 - LinkedIn: https://www.linkedin.com/in/aaryan-p-5a4223331/
-- Portfolio: https://aaryanp35.github.io/my-portfolio/
+- Portfolio: https://aaryanp35.vercel.app
