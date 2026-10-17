@@ -82,5 +82,5 @@ Honest caveats: there are no automated tests yet, story quality is judged by eye
 **Aaryan Patel**, 3rd-year Economics (Data Analytics) student at the University of Toronto, minoring in Computer Science and Statistics. Associate Product Manager at DeUNA (payments) and engineering intern at Strand Analytica.
 
 - Email: aaryanp35@gmail.com
-- LinkedIn: https://www.linkedin.com/in/aaryan-p-5a4223331/
+- LinkedIn: https://www.linkedin.com/in/aaryanp35
 - Portfolio: https://aaryanp35.vercel.app
